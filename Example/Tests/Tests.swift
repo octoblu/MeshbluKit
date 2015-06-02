@@ -9,7 +9,8 @@ class TableOfContentsSpec: QuickSpec {
         describe("these will fail") {
 
             it("can do maths") {
-                expect(1) == 2
+              let meshblu = MeshbluHttp()
+                expect(meshblu.uuid).to(beNil())
             }
 
             it("can read") {

@@ -1,16 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
-pod 'AFNetworking'
 
-target 'MeshbluKit_Example', :exclusive => true do
-  pod "MeshbluKit", :path => "../"
-end
 
 target 'MeshbluKit_Tests', :exclusive => true do
   pod "MeshbluKit", :path => "../"
 
   pod 'Quick'
   pod 'Nimble'
-  pod 'FBSnapshotTestCase'
-  pod 'Nimble-Snapshots'
 end

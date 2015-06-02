@@ -2,50 +2,36 @@
 
 import Quick
 import Nimble
+import Alamofire
 import MeshbluKit
+import SwiftyJSON
 
-class TableOfContentsSpec: QuickSpec {
+class MeshbluHttpSpec: QuickSpec {
     override func spec() {
-        describe("these will fail") {
-
-            it("can do maths") {
-              let meshblu = MeshbluHttp()
-                expect(meshblu.uuid).to(beNil())
-            }
-
-            it("can read") {
-                expect("number") == "string"
-            }
-
-            it("will eventually fail") {
-                expect("time").toEventually( equal("done") )
-            }
-        }
-
-        context("these will pass") {
-
-            it("can do maths") {
-                expect(23) == 23
-            }
-
-            it("can read") {
-                expect("🐮") == "🐮"
-            }
-
-            it("will exentually pass") {
-                var time = "passing"
-
-                dispatch_async(dispatch_get_main_queue()) {
-                    time = "done"
+        describe(".register") {
+            it("works") {
+              
+              class MockHttpRequester : MeshbluHttpRequester {
+                init() {
+                  super.init(meshbluUrl: "", uuid: "", token: "")
                 }
-
-                waitUntil { done in
-                    NSThread.sleepForTimeInterval(0.5)
-                    expect(time) == "done"
-
-                    done()
+                
+                override private func post(path: String, parameters: [String : AnyObject], handler: (JSON) -> ()) {
+                  var data = JSON(["uuid":"123"])
+                  handler(data)
                 }
-            }
+              }
+              let mockRequester = MockHttpRequester()
+              let meshblu = MeshbluHttp(requester: mockRequester)
+              
+              waitUntil { done in
+                meshblu.register({ (data) in
+                  let uuid = data["uuid"].stringValue
+                  expect(uuid) == "123"
+                  done()
+                })
+              }
+          }
         }
     }
 }

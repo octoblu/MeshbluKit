@@ -2,8 +2,10 @@ PODS:
   - Alamofire (1.2.2)
   - MeshbluKit (0.1.0):
     - Alamofire (~> 1.2)
+    - SwiftyJSON (~> 2.2.0)
   - Nimble (0.4.2)
   - Quick (0.3.1)
+  - SwiftyJSON (2.2.0)
 
 DEPENDENCIES:
   - MeshbluKit (from `../`)
@@ -16,8 +18,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 11a6022f5089887d92ffb5a3014c97a0a915ab98
-  MeshbluKit: b79f1055d7c24b9e2728227ba6d37d11358771de
+  MeshbluKit: 622ac3e9ceffbb278ef890551a7aa997a1a1c2f3
   Nimble: 49b7a7da8919f42823d37c6d68cc6d15a7009f32
   Quick: 824572d3d198d51e52cf4aa722cebf7e59952a35
+  SwiftyJSON: 0b3e6c07af17ff745e77e8e9984097b55c956e5c
 
 COCOAPODS: 0.37.2

@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.version          = "0.1.0"
   s.summary          = "Objective-C / Swift Meshblu Client Library"
   s.description      = <<-DESC
-		       Objective-C / Swift Meshblu Client Library
+		       Objective-C / Swift Meshblu Client Library to easily connect Meshblu to iOS
                        DESC
   s.homepage         = "https://github.com/octoblu/MeshbluKit"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"

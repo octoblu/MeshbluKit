@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import Result
 
 public class MeshbluHttpRequester {
   var meshbluUrl : String
@@ -26,7 +27,7 @@ public class MeshbluHttpRequester {
     self.manager = Alamofire.Manager(configuration: configuration)
   }
   
-  public func post(path : String, parameters : [String: AnyObject], handler: (JSON) -> ()){
+  public func post(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     let url = self.meshbluUrl + path
     
     println("About to request")
@@ -34,7 +35,7 @@ public class MeshbluHttpRequester {
     self.manager.request(.POST, url, parameters: parameters, encoding: .JSON)
       .responseJSON { (request, response, data, error) in
         let json = JSON(data!)
-        handler(json)
+        handler(Result(value: json))
     }
   }}
 
@@ -52,21 +53,23 @@ public class MeshbluHttpRequester {
     self.httpRequester = requester
   }
   
-  public func register(handler: (JSON) -> ()){
+  public func register(handler: (Result<JSON, NSError>) -> ()){
     let registrationParameters = ["type": "device:beacon-blu", "online" : "true"]
     self.httpRequester.post("/devices", parameters: registrationParameters) {
-      (data: JSON) -> () in
-      if data == nil {
+      (result) -> () in
+      switch result {
+      case let .Failure(error):
         NSLog("Unable to register")
-        return
+      case let .Success(success):
+        let data = success.value
+        NSLog("Device Created")
+        self.uuid = data["uuid"].stringValue
+        self.token = data["token"].stringValue
+        let settings = NSUserDefaults.standardUserDefaults()
+        settings.setObject(self.uuid, forKey: "deviceUuid")
+        settings.setObject(self.token, forKey: "deviceToken")
       }
-      NSLog("Device Created")
-      self.uuid = data["uuid"].stringValue
-      self.token = data["token"].stringValue
-      let settings = NSUserDefaults.standardUserDefaults()
-      settings.setObject(self.uuid, forKey: "deviceUuid")
-      settings.setObject(self.token, forKey: "deviceToken")
-      handler(data);
+      handler(result);
     }
   }
   

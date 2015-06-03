@@ -33,4 +33,5 @@ Pod::Spec.new do |s|
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'Alamofire', '~> 1.2'
   s.dependency 'SwiftyJSON', '~> 2.2.0'
+  s.dependency 'Result'
 end

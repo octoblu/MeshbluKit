@@ -37,7 +37,7 @@ class MeshbluHttpSpec: QuickSpec {
         beforeEach {
           mockRequester.postResponse = Result(value: JSON(["uuid":"123"]))
           waitUntil { done in
-            meshblu.register() { (result) in
+            meshblu.register([:]) { (result) in
               responseJSON = result.value
               responseError = result.error
               done()
@@ -59,7 +59,7 @@ class MeshbluHttpSpec: QuickSpec {
           let error = NSError()
           mockRequester.postResponse = Result(error: error)
           waitUntil { done in
-            meshblu.register() { (result) in
+            meshblu.register([:]) { (result) in
               responseJSON = result.value
               responseError = result.error
               done()
@@ -75,7 +75,6 @@ class MeshbluHttpSpec: QuickSpec {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
     }
 
     

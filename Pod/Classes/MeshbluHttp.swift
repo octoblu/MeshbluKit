@@ -23,7 +23,6 @@ public class MeshbluHttpRequester {
     if (self.meshbluConfig["host"] == nil){
       self.meshbluConfig["host"] = "meshblu.octoblu.com"
     }
-    
     var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
     defaultHeaders["X-Meshblu-UUID"] = self.meshbluConfig["uuid"]
     defaultHeaders["X-Meshblu-Token"] = self.meshbluConfig["token"]
@@ -61,9 +60,8 @@ public class MeshbluHttpRequester {
     self.httpRequester = requester
   }
   
-  public func register(handler: (Result<JSON, NSError>) -> ()){
-    let registrationParameters = ["type": "device:beacon-blu", "online" : "true"]
-    self.httpRequester.post("/devices", parameters: registrationParameters) {
+  public func register(device: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.post("/devices", parameters: device) {
       (result) -> () in
         
       handler(result)

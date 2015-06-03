@@ -17,6 +17,13 @@ public class MeshbluHttpRequester {
   
   public init(meshbluConfig: [String: AnyObject]){
     self.meshbluConfig = meshbluConfig
+    if (self.meshbluConfig["port"] == nil){
+      self.meshbluConfig["port"] = 443
+    }
+    if (self.meshbluConfig["host"] == nil){
+      self.meshbluConfig["host"] = "meshblu.octoblu.com"
+    }
+    
     var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
     defaultHeaders["X-Meshblu-UUID"] = self.meshbluConfig["uuid"]
     defaultHeaders["X-Meshblu-Token"] = self.meshbluConfig["token"]

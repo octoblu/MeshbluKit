@@ -12,14 +12,14 @@ import SwiftyJSON
 import Result
 
 public class MeshbluHttpRequester {
-  var meshbluUrl : String
+  var meshbluConfig : [String: AnyObject]
   var manager : Alamofire.Manager
   
-  public init(meshbluUrl: String, uuid: String, token: String){
-    self.meshbluUrl = meshbluUrl ?? "https://meshblu.octoblu.com"
+  public init(meshbluConfig: [String: AnyObject]){
+    self.meshbluConfig = meshbluConfig
     var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
-    defaultHeaders["X-Meshblu-UUID"] = uuid
-    defaultHeaders["X-Meshblu-Token"] = token
+    defaultHeaders["X-Meshblu-UUID"] = self.meshbluConfig["uuid"]
+    defaultHeaders["X-Meshblu-Token"] = self.meshbluConfig["token"]
     
     let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
     configuration.HTTPAdditionalHeaders = defaultHeaders
@@ -28,7 +28,11 @@ public class MeshbluHttpRequester {
   }
   
   public func post(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
-    let url = self.meshbluUrl + path
+    let urlComponent = NSURLComponents()
+    urlComponent.port = self.meshbluConfig["port"] as? NSNumber
+    urlComponent.host = self.meshbluConfig["host"] as? String
+    urlComponent.path = path
+    let url = urlComponent.string!
     
     println("About to request")
     
@@ -40,13 +44,10 @@ public class MeshbluHttpRequester {
   }}
 
 @objc (MeshbluHttp) public class MeshbluHttp {
-  
-  public var uuid : String? //= "8f218bb0-8237-11e4-8019-f97967ce66a8"
-  public var token : String? //= "4fp9t1uhn6uvj9k9ght5oppvxe83q5mi"
   var httpRequester : MeshbluHttpRequester
   
-  public init(meshbluUrl: String) {
-    self.httpRequester = MeshbluHttpRequester(meshbluUrl: meshbluUrl, uuid: "", token: "")
+  public init(meshbluConfig: [String: AnyObject]) {
+    self.httpRequester = MeshbluHttpRequester(meshbluConfig: meshbluConfig)
   }
   
   public init(requester: MeshbluHttpRequester){

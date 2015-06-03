@@ -14,7 +14,7 @@ class MeshbluHttpSpec: QuickSpec {
       var postResponse : Result<JSON, NSError>!
       
       init() {
-        super.init(meshbluUrl: "", uuid: "", token: "")
+        super.init(meshbluConfig: [:])
       }
       
       override private func post(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {

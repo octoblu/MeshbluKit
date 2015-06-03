@@ -57,21 +57,17 @@ public class MeshbluHttpRequester {
     let registrationParameters = ["type": "device:beacon-blu", "online" : "true"]
     self.httpRequester.post("/devices", parameters: registrationParameters) {
       (result) -> () in
-      switch result {
-      case let .Failure(error):
-        NSLog("Unable to register")
-      case let .Success(success):
-        let data = success.value
-        NSLog("Device Created")
-        self.uuid = data["uuid"].stringValue
-        self.token = data["token"].stringValue
-        let settings = NSUserDefaults.standardUserDefaults()
-        settings.setObject(self.uuid, forKey: "deviceUuid")
-        settings.setObject(self.token, forKey: "deviceToken")
-      }
-      handler(result);
+        
+      handler(result)
     }
   }
   
+  public func message(message: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.post("/messages", parameters: message) {
+      (result) -> () in
+      
+      handler(result)
+    }
+  }
 
 }

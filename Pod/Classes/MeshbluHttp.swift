@@ -37,6 +37,7 @@ public class MeshbluHttpRequester {
     let urlComponent = NSURLComponents()
     urlComponent.port = self.meshbluConfig["port"] as? NSNumber
     urlComponent.host = self.meshbluConfig["host"] as? String
+    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
     urlComponent.path = path
     let url = urlComponent.string!
     

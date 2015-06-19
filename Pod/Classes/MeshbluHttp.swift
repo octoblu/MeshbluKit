@@ -48,7 +48,27 @@ public class MeshbluHttpRequester {
         let json = JSON(data!)
         handler(Result(value: json))
     }
-  }}
+  }
+  
+  public func put(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    let urlComponent = NSURLComponents()
+    urlComponent.port = self.meshbluConfig["port"] as? NSNumber
+    urlComponent.host = self.meshbluConfig["host"] as? String
+    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
+    urlComponent.path = path
+    let url = urlComponent.string!
+    
+    println("About to request")
+    
+    self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON)
+      .responseJSON { (request, response, data, error) in
+        let json = JSON(data!)
+        handler(Result(value: json))
+    }
+  }
+
+  
+}
 
 @objc (MeshbluHttp) public class MeshbluHttp {
   var httpRequester : MeshbluHttpRequester
@@ -75,6 +95,19 @@ public class MeshbluHttpRequester {
       
       handler(result)
     }
+  }
+  
+  public func update(uuid: String, properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.put("/devices/\(uuid)", parameters: properties) {
+      (result) -> () in
+      
+      handler(result)
+    }
+  }
+  
+  public func update(properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    var uuid = self.httpRequester.meshbluConfig["uuid"] as! String
+    update(uuid, properties: properties, handler: handler);
   }
 
 }

@@ -12,20 +12,25 @@ import SwiftyJSON
 import Result
 
 public class MeshbluHttpRequester {
-  var meshbluConfig : [String: AnyObject]
+  let host : String
+  let port : Int
   var manager : Alamofire.Manager
   
-  public init(meshbluConfig: [String: AnyObject]){
-    self.meshbluConfig = meshbluConfig
-    if (self.meshbluConfig["port"] == nil){
-      self.meshbluConfig["port"] = 443
-    }
-    if (self.meshbluConfig["host"] == nil){
-      self.meshbluConfig["host"] = "meshblu.octoblu.com"
-    }
+  
+  public init(host : String, port : Int){
+    self.host = host
+    self.port = port
+    self.manager = Alamofire.Manager()
+  }
+  
+  public convenience init(){
+    self.init(host: "meshblu.octoblu.com", port: 443)
+  }
+  
+  public func setHeaders(uuid : String, token : String) {
     var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
-    defaultHeaders["X-Meshblu-UUID"] = self.meshbluConfig["uuid"]
-    defaultHeaders["X-Meshblu-Token"] = self.meshbluConfig["token"]
+    defaultHeaders["X-Meshblu-UUID"] = uuid
+    defaultHeaders["X-Meshblu-Token"] = token
     
     let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
     configuration.HTTPAdditionalHeaders = defaultHeaders
@@ -35,8 +40,8 @@ public class MeshbluHttpRequester {
   
   public func post(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     let urlComponent = NSURLComponents()
-    urlComponent.port = self.meshbluConfig["port"] as? NSNumber
-    urlComponent.host = self.meshbluConfig["host"] as? String
+    urlComponent.port = self.port
+    urlComponent.host = self.host
     urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
     urlComponent.path = path
     let url = urlComponent.string!
@@ -52,8 +57,8 @@ public class MeshbluHttpRequester {
   
   public func put(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     let urlComponent = NSURLComponents()
-    urlComponent.port = self.meshbluConfig["port"] as? NSNumber
-    urlComponent.host = self.meshbluConfig["host"] as? String
+    urlComponent.port = self.port
+    urlComponent.host = self.host
     urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
     urlComponent.path = path
     let url = urlComponent.string!
@@ -66,25 +71,31 @@ public class MeshbluHttpRequester {
         handler(Result(value: json))
     }
   }
-
-  
 }
 
 @objc (MeshbluHttp) public class MeshbluHttp {
   var httpRequester : MeshbluHttpRequester
+  var meshbluConfig : [String: AnyObject] = [:]
   
   public init(meshbluConfig: [String: AnyObject]) {
-    self.httpRequester = MeshbluHttpRequester(meshbluConfig: meshbluConfig)
+    self.meshbluConfig = meshbluConfig
+    self.httpRequester = MeshbluHttpRequester()
   }
   
-  public init(requester: MeshbluHttpRequester){
-    self.httpRequester = requester
+  public func isNotRegistered() -> Bool {
+    return self.meshbluConfig["uuid"] == nil
+  }
+  
+  public func setCredentials(uuid: String, token: String) {
+    self.meshbluConfig.updateValue(uuid, forKey: "uuid")
+    self.meshbluConfig.updateValue(token, forKey: "token")
+    self.httpRequester.setHeaders(uuid, token: token)
   }
   
   public func register(device: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     self.httpRequester.post("/devices", parameters: device) {
       (result) -> () in
-        
+    
       handler(result)
     }
   }
@@ -106,8 +117,7 @@ public class MeshbluHttpRequester {
   }
   
   public func update(properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
-    var uuid = self.httpRequester.meshbluConfig["uuid"] as! String
+    var uuid = self.meshbluConfig["uuid"] as! String
     update(uuid, properties: properties, handler: handler);
   }
-
 }

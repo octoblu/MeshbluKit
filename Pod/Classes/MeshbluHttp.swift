@@ -46,8 +46,6 @@ public class MeshbluHttpRequester {
     urlComponent.path = path
     let url = urlComponent.string!
     
-    println("About to request")
-    
     self.manager.request(.POST, url, parameters: parameters, encoding: .JSON)
       .responseJSON { (request, response, data, error) in
         let json = JSON(data!)
@@ -62,8 +60,6 @@ public class MeshbluHttpRequester {
     urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
     urlComponent.path = path
     let url = urlComponent.string!
-    
-    println("About to request")
     
     self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON)
       .responseJSON { (request, response, data, error) in

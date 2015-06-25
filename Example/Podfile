@@ -5,6 +5,6 @@ use_frameworks!
 target 'MeshbluKit_Tests', :exclusive => true do
   pod "MeshbluKit", :path => "../"
 
-  pod 'Quick'
-  pod 'Nimble'
+  pod 'Quick', '=0.3.1'
+  pod 'Nimble', '=0.4.2'
 end

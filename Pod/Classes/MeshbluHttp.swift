@@ -26,6 +26,10 @@ public class MeshbluHttpRequester {
   public convenience init(){
     self.init(host: "meshblu.octoblu.com", port: 443)
   }
+
+  public convenience init(meshbluConfig: [String: AnyObject]){
+    self.init(host: "example", port: 1)
+  }
   
   public func setHeaders(uuid : String, token : String) {
     var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
@@ -76,6 +80,10 @@ public class MeshbluHttpRequester {
   public init(meshbluConfig: [String: AnyObject]) {
     self.meshbluConfig = meshbluConfig
     self.httpRequester = MeshbluHttpRequester()
+  }
+  
+  public init(requester: MeshbluHttpRequester) {
+    self.httpRequester = requester
   }
   
   public func isNotRegistered() -> Bool {

@@ -12,11 +12,7 @@ class MeshbluHttpSpec: QuickSpec {
 
     class MockHttpRequester : MeshbluHttpRequester {
       var postResponse : Result<JSON, NSError>!
-      
-      init() {
-        super.init(meshbluConfig: [:])
-      }
-      
+            
       override private func post(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {
         handler(self.postResponse)
       }

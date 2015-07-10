@@ -96,6 +96,22 @@ public class MeshbluHttpRequester {
     self.httpRequester.setHeaders(uuid, token: token)
   }
   
+  public func claimDevice(uuid: String, handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.put("/claimdevice/\(uuid)", parameters: [:]) {
+      (result) -> () in
+      
+      handler(result)
+    }
+  }
+  
+  public func data(uuid: String, message: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.post("/data/\(uuid)", parameters: message) {
+      (result) -> () in
+      
+      handler(result)
+    }
+  }
+  
   public func register(device: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     self.httpRequester.post("/devices", parameters: device) {
       (result) -> () in

@@ -12,10 +12,16 @@ class MeshbluHttpSpec: QuickSpec {
 
     class MockHttpRequester : MeshbluHttpRequester {
       var postResponse : Result<JSON, NSError>!
-            
+      var putResponse : Result<JSON, NSError>!
+      
       override private func post(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {
         handler(self.postResponse)
       }
+
+      override private func put(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {
+        handler(self.putResponse)
+      }
+
     }
     
     describe(".register") {
@@ -127,7 +133,119 @@ class MeshbluHttpSpec: QuickSpec {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
+    }
+    
+    describe(".data") {
+      var mockRequester: MockHttpRequester!
+      var responseJSON: JSON!
+      var responseError: NSError!
+      var meshblu: MeshbluHttp!
+      
+      beforeEach {
+        mockRequester = MockHttpRequester()
+        meshblu = MeshbluHttp(requester: mockRequester)
+      }
+      
+      describe("when successful") {
+        beforeEach {
+          mockRequester.postResponse = Result(value: JSON(["data":"blah"]))
+          waitUntil { done in
+            meshblu.data("uuid", message: ["data":"blah"]) { (result) in
+              responseJSON = result.value
+              responseError = result.error
+              done()
+            }
+          }
+        }
+        
+        it("should return the message") {
+          expect(responseJSON["data"].string) == "blah"
+        }
+        
+        it("should not have an error") {
+          expect(responseError).to(beNil())
+        }
+      }
+      
+      describe("when error") {
+        beforeEach {
+          let error = NSError()
+          mockRequester.postResponse = Result(error: error)
+          waitUntil { done in
+            meshblu.data("uuid", message: ["data":"blah"]) { (result) in
+              responseJSON = result.value
+              responseError = result.error
+              done()
+            }
+          }
+        }
+        
+        it("should not return a value") {
+          expect(responseJSON).to(beNil())
+        }
+        
+        it("should have an error") {
+          expect(responseError).to(beAKindOf(NSError))
+        }
+      }
       
     }
+
+    describe(".claimdevice") {
+      var mockRequester: MockHttpRequester!
+      var responseJSON: JSON!
+      var responseError: NSError!
+      var meshblu: MeshbluHttp!
+      
+      beforeEach {
+        mockRequester = MockHttpRequester()
+        meshblu = MeshbluHttp(requester: mockRequester)
+      }
+      
+      describe("when successful") {
+        beforeEach {
+          mockRequester.putResponse = Result(value: JSON(["something":"test"]))
+          waitUntil { done in
+            meshblu.claimDevice("some-device") { (result) in
+              responseJSON = result.value
+              responseError = result.error
+              done()
+            }
+          }
+        }
+        
+        it("should return the message") {
+          expect(responseJSON["something"].string) == "test"
+        }
+        
+        it("should not have an error") {
+          expect(responseError).to(beNil())
+        }
+      }
+      
+      describe("when error") {
+        beforeEach {
+          let error = NSError()
+          mockRequester.putResponse = Result(value: JSON(["something":"test"]))
+          waitUntil { done in
+            meshblu.claimDevice("some-uuid") { (result) in
+              responseJSON = result.value
+              responseError = result.error
+              done()
+            }
+          }
+        }
+        
+        it("should not return a value") {
+          expect(responseJSON).to(beNil())
+        }
+        
+        it("should have an error") {
+          expect(responseError).to(beAKindOf(NSError))
+        }
+      }
+      
+    }
+
   }
 }

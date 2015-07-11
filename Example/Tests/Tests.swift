@@ -708,6 +708,62 @@ class MeshbluHttpSpec: QuickSpec {
       }
       
     }
+
+    describe(".devices") {
+      var mockRequester: MockHttpRequester!
+      var responseJSON: JSON!
+      var responseError: NSError!
+      var meshblu: MeshbluHttp!
+      
+      beforeEach {
+        mockRequester = MockHttpRequester()
+        meshblu = MeshbluHttp(requester: mockRequester)
+      }
+      
+      describe("when successful") {
+        beforeEach {
+          mockRequester.getResponse = Result(value: JSON([["something":"test"]]))
+          waitUntil { done in
+            meshblu.whoami() { (result) in
+              responseJSON = result.value
+              responseError = result.error
+              done()
+            }
+          }
+        }
+        
+        it("should return a list of devices") {
+          expect(responseJSON[0]["something"].string) == "test"
+        }
+        
+        it("should not have an error") {
+          expect(responseError).to(beNil())
+        }
+      }
+      
+      describe("when error") {
+        beforeEach {
+          let error = NSError()
+          mockRequester.getResponse = Result(error: error)
+          waitUntil { done in
+            meshblu.whoami() { (result) in
+              responseJSON = result.value
+              responseError = result.error
+              done()
+            }
+          }
+        }
+        
+        it("should not return a value") {
+          expect(responseJSON).to(beNil())
+        }
+        
+        it("should have an error") {
+          expect(responseError).to(beAKindOf(NSError))
+        }
+      }
+      
+    }
     
   }
 }

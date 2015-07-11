@@ -189,9 +189,8 @@ public class MeshbluHttpRequester {
     }
   }
   
-  
   public func getPublicKey(uuid: String, handler: (Result<JSON, NSError>) -> ()){
-    self.httpRequester.get("/data/\(uuid)/publickey", parameters: [:]) {
+    self.httpRequester.get("/devices/\(uuid)/publickey", parameters: [:]) {
       (result) -> () in
       
       handler(result)
@@ -222,7 +221,6 @@ public class MeshbluHttpRequester {
     }
   }
   
-  
   public func update(uuid: String, properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     self.httpRequester.patch("/v2/devices/\(uuid)", parameters: properties) {
       (result) -> () in
@@ -238,6 +236,14 @@ public class MeshbluHttpRequester {
 
   public func updateDangerously(uuid: String, properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     self.httpRequester.put("/v2/devices/\(uuid)", parameters: properties) {
+      (result) -> () in
+      
+      handler(result)
+    }
+  }
+  
+  public func whoami(handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.get("/v2/whoami", parameters: [:]) {
       (result) -> () in
       
       handler(result)

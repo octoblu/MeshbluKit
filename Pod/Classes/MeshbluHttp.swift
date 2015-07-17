@@ -14,13 +14,10 @@ import Result
 public class MeshbluHttpRequester {
   let host : String
   let port : Int
-  var manager : Alamofire.Manager
-
 
   public init(host : String, port : Int){
     self.host = host
     self.port = port
-    self.manager = Alamofire.Manager()
   }
 
   public convenience init(){
@@ -31,15 +28,16 @@ public class MeshbluHttpRequester {
     self.init(host: "example", port: 1)
   }
 
-  public func setHeaders(uuid : String, token : String) {
-    var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
-    defaultHeaders["X-Meshblu-UUID"] = uuid
-    defaultHeaders["X-Meshblu-Token"] = token
+  private func getManager() -> Manager {
+    return Alamofire.Manager.sharedInstance
+  }
 
-    let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-    configuration.HTTPAdditionalHeaders = defaultHeaders
+  public func setDefaultHeaders(uuid : String, token : String) {
+    var defaultHeaders = getManager().session.configuration.HTTPAdditionalHeaders ?? [:]
+    defaultHeaders["meshblu_auth_uuid"] = uuid
+    defaultHeaders["meshblu_auth_token"] = token
 
-    self.manager = Alamofire.Manager(configuration: configuration)
+    getManager().session.configuration.HTTPAdditionalHeaders = defaultHeaders
   }
 
   public func delete(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
@@ -50,13 +48,9 @@ public class MeshbluHttpRequester {
     urlComponent.path = path
     let url = urlComponent.string!
 
-    self.manager.request(.DELETE, url, parameters: parameters, encoding: .JSON)
+    getManager().request(.DELETE, url, parameters: parameters)
       .responseJSON { (request, response, data, error) in
-        if error != nil {
-          handler(Result(error: error))
-          return
-        }
-        if data == nil {
+        if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
           return
@@ -74,18 +68,14 @@ public class MeshbluHttpRequester {
     urlComponent.path = path
     let url = urlComponent.string!
 
-    self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
+    getManager().request(.GET, url, parameters: parameters)
       .responseJSON { (request, response, data, error) in
-        let json = JSON(data!)
-        if error != nil {
-          handler(Result(error: error))
-          return
-        }
-        if data == nil {
+        if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
           return
         }
+        let json = JSON(data!)
         handler(Result(value: json))
     }
   }
@@ -98,13 +88,9 @@ public class MeshbluHttpRequester {
     urlComponent.path = path
     let url = urlComponent.string!
 
-    self.manager.request(.PATCH, url, parameters: parameters, encoding: .JSON)
+    getManager().request(.PATCH, url, parameters: parameters)
       .responseJSON { (request, response, data, error) in
-        if error != nil {
-          handler(Result(error: error))
-          return
-        }
-        if data == nil {
+        if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
           return
@@ -123,13 +109,9 @@ public class MeshbluHttpRequester {
     urlComponent.path = path
     let url = urlComponent.string!
 
-    self.manager.request(.POST, url, parameters: parameters, encoding: .JSON)
+    getManager().request(.POST, url, parameters: parameters)
       .responseJSON { (request, response, data, error) in
-        if error != nil {
-          handler(Result(error: error))
-          return
-        }
-        if data == nil {
+        if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
           return
@@ -147,13 +129,9 @@ public class MeshbluHttpRequester {
     urlComponent.path = path
     let url = urlComponent.string!
 
-    self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON)
+    getManager().request(.PUT, url, parameters: parameters)
       .responseJSON { (request, response, data, error) in
-        if error != nil {
-          handler(Result(error: error))
-          return
-        }
-        if data == nil {
+        if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
           return
@@ -184,7 +162,7 @@ public class MeshbluHttpRequester {
   public func setCredentials(uuid: String, token: String) {
     self.meshbluConfig.updateValue(uuid, forKey: "uuid")
     self.meshbluConfig.updateValue(token, forKey: "token")
-    self.httpRequester.setHeaders(uuid, token: token)
+    self.httpRequester.setDefaultHeaders(uuid, token: token)
   }
 
   public func claimDevice(uuid: String, handler: (Result<JSON, NSError>) -> ()){

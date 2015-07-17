@@ -56,8 +56,9 @@ public class MeshbluHttpRequester {
           handler(Result(error: error))
           return
         }
-        if data != nil {
-          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+        if data == nil {
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
           return
         }
         let json = JSON(data!)
@@ -80,8 +81,9 @@ public class MeshbluHttpRequester {
           handler(Result(error: error))
           return
         }
-        if data != nil {
-          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+        if data == nil {
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
           return
         }
         handler(Result(value: json))
@@ -102,8 +104,9 @@ public class MeshbluHttpRequester {
           handler(Result(error: error))
           return
         }
-        if data != nil {
-          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+        if data == nil {
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
           return
         }
 
@@ -126,8 +129,9 @@ public class MeshbluHttpRequester {
           handler(Result(error: error))
           return
         }
-        if data != nil {
-          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+        if data == nil {
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
           return
         }
         let json = JSON(data!)
@@ -149,8 +153,9 @@ public class MeshbluHttpRequester {
           handler(Result(error: error))
           return
         }
-        if data != nil {
-          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+        if data == nil {
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
           return
         }
         let json = JSON(data!)

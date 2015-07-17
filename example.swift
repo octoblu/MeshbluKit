@@ -11,12 +11,10 @@ class MeshbluExample : AnyObject {
     if uuid != nil && token != nil {
       self.meshbluHttp.setCredentials(uuid!, token: token!)
     }
-    super.init()
   }
 
   init(meshbluHttp: MeshbluHttp) {
     self.meshbluHttp = meshbluHttp
-    super.init()
   }
 
   func getMeshbluClient() -> MeshbluHttp {
@@ -54,7 +52,7 @@ class MeshbluExample : AnyObject {
     self.meshbluHttp.message(message) {
       (result) -> () in
       handler(result)
-      self.debugln("Message Sent: \(message)")
+      println("Message Sent: \(message)")
     }
   }
 }

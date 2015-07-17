@@ -42,6 +42,51 @@ public class MeshbluHttpRequester {
     self.manager = Alamofire.Manager(configuration: configuration)
   }
 
+  public func delete(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    let urlComponent = NSURLComponents()
+    urlComponent.port = self.port
+    urlComponent.host = self.host
+    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
+    urlComponent.path = path
+    let url = urlComponent.string!
+
+    self.manager.request(.DELETE, url, parameters: parameters, encoding: .JSON)
+      .responseJSON { (request, response, data, error) in
+        let json = JSON(data!)
+        handler(Result(value: json))
+    }
+  }
+
+  public func get(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    let urlComponent = NSURLComponents()
+    urlComponent.port = self.port
+    urlComponent.host = self.host
+    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
+    urlComponent.path = path
+    let url = urlComponent.string!
+
+    self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
+      .responseJSON { (request, response, data, error) in
+        let json = JSON(data!)
+        handler(Result(value: json))
+    }
+  }
+
+  public func patch(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    let urlComponent = NSURLComponents()
+    urlComponent.port = self.port
+    urlComponent.host = self.host
+    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
+    urlComponent.path = path
+    let url = urlComponent.string!
+
+    self.manager.request(.PATCH, url, parameters: parameters, encoding: .JSON)
+      .responseJSON { (request, response, data, error) in
+        let json = JSON(data!)
+        handler(Result(value: json))
+    }
+  }
+
   public func post(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     let urlComponent = NSURLComponents()
     urlComponent.port = self.port
@@ -104,14 +149,6 @@ public class MeshbluHttpRequester {
     }
   }
 
-  public func generateAndStoreToken(uuid: String, handler: (Result<JSON, NSError>) -> ()) {
-    self.httpRequester.post("devices/\(uuid)/tokens", parameters: [:]) {
-      (result) -> () in
-
-      handler(result)
-    }
-  }
-
   public func data(uuid: String, message: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     self.httpRequester.post("/data/\(uuid)", parameters: message) {
       (result) -> () in
@@ -120,8 +157,56 @@ public class MeshbluHttpRequester {
     }
   }
 
+  public func deleteDevice(uuid: String, handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.delete("/devices/\(uuid)", parameters: [:]) {
+      (result) -> () in
+
+      handler(result)
+    }
+  }
+
+  public func devices(options: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.get("/v2/devices", parameters: options) {
+      (result) -> () in
+
+      handler(result)
+    }
+  }
+
+  public func generateToken(uuid: String, handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.post("/devices/\(uuid)/tokens", parameters: [:]) {
+      (result) -> () in
+
+      handler(result)
+    }
+  }
+
+  public func getData(uuid: String, options: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.get("/data/\(uuid)", parameters: options) {
+      (result) -> () in
+
+      handler(result)
+    }
+  }
+
+  public func getPublicKey(uuid: String, handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.get("/devices/\(uuid)/publickey", parameters: [:]) {
+      (result) -> () in
+
+      handler(result)
+    }
+  }
+
   public func register(device: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     self.httpRequester.post("/devices", parameters: device) {
+      (result) -> () in
+
+      handler(result)
+    }
+  }
+
+  public func resetToken(uuid: String, handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.post("/devices/\(uuid)/token", parameters: [:]) {
       (result) -> () in
 
       handler(result)
@@ -137,7 +222,7 @@ public class MeshbluHttpRequester {
   }
 
   public func update(uuid: String, properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
-    self.httpRequester.put("/devices/\(uuid)", parameters: properties) {
+    self.httpRequester.patch("/v2/devices/\(uuid)", parameters: properties) {
       (result) -> () in
 
       handler(result)
@@ -147,6 +232,22 @@ public class MeshbluHttpRequester {
   public func update(properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
     var uuid = self.meshbluConfig["uuid"] as! String
     update(uuid, properties: properties, handler: handler);
+  }
+
+  public func updateDangerously(uuid: String, properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.put("/v2/devices/\(uuid)", parameters: properties) {
+      (result) -> () in
+
+      handler(result)
+    }
+  }
+
+  public func whoami(handler: (Result<JSON, NSError>) -> ()){
+    self.httpRequester.get("/v2/whoami", parameters: [:]) {
+      (result) -> () in
+
+      handler(result)
+    }
   }
 
 }

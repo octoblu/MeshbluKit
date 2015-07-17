@@ -21,7 +21,7 @@ pod "MeshbluKit"
 ```
 ## API
 
-Is device registered
+Is device registered?
 ```swift
 isNotRegistered() -> Bool
 ```
@@ -36,19 +36,39 @@ Claim Device
 claimDevice(uuid: String, handler: (Result<JSON, NSError>) -> ())
 ```
 
+Get Devices
+```swift
+devices(options: [String: AnyObject], handler: (Result<JSON, NSError>) -> ())
+```
+
+Delete Device
+```swift
+deleteDevice(uuid: String, handler: (Result<JSON, NSError>) -> ())
+```
+
+Get Data
+```swift
+getData(uuid: String, options: [String: AnyObject], handler: (Result<JSON, NSError>) -> ())
+```
+
 Send Data Message
 ```swift
 data(uuid: String, message: [String: AnyObject], handler: (Result<JSON, NSError>) -> ())
 ```
 
-Register Device
-```swift
-register(device: [String: AnyObject], handler: (Result<JSON, NSError>) -> ())
-```
-
 Send Message
 ```swift
 message(message: [String: AnyObject], handler: (Result<JSON, NSError>) -> ())
+```
+
+Generate New Session Token
+```swift
+generateToken(uuid: String, handler: (Result<JSON, NSError>) -> ())
+```
+
+Reset Token
+```swift
+resetToken(uuid: String, handler: (Result<JSON, NSError>) -> ())
 ```
 
 Update
@@ -58,11 +78,26 @@ update(uuid: String, properties: [String: AnyObject], handler: (Result<JSON, NSE
 update(properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ())
 ```
 
-Generate New Session Token
+Update Dangerously
 ```swift
-generateAndStoreToken(uuid: String, handler: (Result<JSON, NSError>) -> ())
+updateDangerously(uuid: String, properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ())
 ```
 
+Register Device
+```swift
+register(device: [String: AnyObject], handler: (Result<JSON, NSError>) -> ())
+```
+
+Get PublicKey
+
+```swift
+getPublicKey(uuid: String, handler: (Result<JSON, NSError>) -> ())
+```
+
+Who am i?
+```swift
+whoami(handler: (Result<JSON, NSError>) -> ())
+```
 
 ## Usage:
 

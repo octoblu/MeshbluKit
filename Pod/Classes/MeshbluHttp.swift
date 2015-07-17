@@ -52,6 +52,14 @@ public class MeshbluHttpRequester {
 
     self.manager.request(.DELETE, url, parameters: parameters, encoding: .JSON)
       .responseJSON { (request, response, data, error) in
+        if error != nil {
+          handler(Result(error: error))
+          return
+        }
+        if data != nil {
+          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+          return
+        }
         let json = JSON(data!)
         handler(Result(value: json))
     }
@@ -68,6 +76,14 @@ public class MeshbluHttpRequester {
     self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
       .responseJSON { (request, response, data, error) in
         let json = JSON(data!)
+        if error != nil {
+          handler(Result(error: error))
+          return
+        }
+        if data != nil {
+          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+          return
+        }
         handler(Result(value: json))
     }
   }
@@ -82,6 +98,15 @@ public class MeshbluHttpRequester {
 
     self.manager.request(.PATCH, url, parameters: parameters, encoding: .JSON)
       .responseJSON { (request, response, data, error) in
+        if error != nil {
+          handler(Result(error: error))
+          return
+        }
+        if data != nil {
+          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+          return
+        }
+
         let json = JSON(data!)
         handler(Result(value: json))
     }
@@ -97,6 +122,14 @@ public class MeshbluHttpRequester {
 
     self.manager.request(.POST, url, parameters: parameters, encoding: .JSON)
       .responseJSON { (request, response, data, error) in
+        if error != nil {
+          handler(Result(error: error))
+          return
+        }
+        if data != nil {
+          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+          return
+        }
         let json = JSON(data!)
         handler(Result(value: json))
     }
@@ -112,6 +145,14 @@ public class MeshbluHttpRequester {
 
     self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON)
       .responseJSON { (request, response, data, error) in
+        if error != nil {
+          handler(Result(error: error))
+          return
+        }
+        if data != nil {
+          handler(Result(error: NSError(domain: "Meshblu", code: 500, userInfo: [:])))
+          return
+        }
         let json = JSON(data!)
         handler(Result(value: json))
     }

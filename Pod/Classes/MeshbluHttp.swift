@@ -9,7 +9,6 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import Result
 
 public class MeshbluHttpRequester {
   let host : String

@@ -72,10 +72,10 @@ public class MeshbluHttpRequester {
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
-          return
+        }else{
+          let json = JSON(data!)
+          handler(Result(value: json))
         }
-        let json = JSON(data!)
-        handler(Result(value: json))
     }
   }
 
@@ -92,11 +92,10 @@ public class MeshbluHttpRequester {
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
-          return
+        }else{
+          let json = JSON(data!)
+          handler(Result(value: json))
         }
-
-        let json = JSON(data!)
-        handler(Result(value: json))
     }
   }
 
@@ -113,10 +112,10 @@ public class MeshbluHttpRequester {
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
-          return
+        }else{
+          let json = JSON(data!)
+          handler(Result(value: json))
         }
-        let json = JSON(data!)
-        handler(Result(value: json))
     }
   }
 
@@ -133,10 +132,10 @@ public class MeshbluHttpRequester {
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
-          return
+        }else{
+          let json = JSON(data!)
+          handler(Result(value: json))
         }
-        let json = JSON(data!)
-        handler(Result(value: json))
     }
   }
 }
@@ -253,7 +252,7 @@ public class MeshbluHttp {
   }
 
   public func update(properties: [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
-    var uuid = self.meshbluConfig["uuid"] as! String
+    let uuid = self.meshbluConfig["uuid"] as! String
     update(uuid, properties: properties, handler: handler);
   }
 

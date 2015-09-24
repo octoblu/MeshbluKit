@@ -57,7 +57,7 @@ public class MeshbluHttpRequester {
 
   private func handleResult(result: Alamofire.Result<AnyObject>, handler: (Result<JSON, NSError>) -> ()){
     if result.isFailure {
-      let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [NSLocalizedFailureReasonErrorKey: result.error])
+      let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [NSLocalizedFailureReasonErrorKey: "\(result.error)"])
       handler(Result(error: error))
       return
     }

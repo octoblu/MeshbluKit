@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MeshbluKit"
-  s.version          = "1.2.12"
+  s.version          = "1.2.13"
   s.summary          = "Objective-C / Swift Meshblu Client Library"
   s.description      = <<-DESC
 		       Objective-C / Swift Meshblu Client Library to easily connect Meshblu to iOS
@@ -31,6 +31,7 @@ Pod::Spec.new do |s|
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'Alamofire', '3.0.0-beta.1'
+  s.dependency 'Alamofire', '~> 2.0'
   s.dependency 'SwiftyJSON', '~> 2.3.0'
+  s.dependency 'Result', '~> 0.4.4'
 end

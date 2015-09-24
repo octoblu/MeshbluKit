@@ -48,7 +48,7 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.DELETE, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) -> Void in
+      .responseJSON { (request, response, data, error) in
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
@@ -68,7 +68,7 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.GET, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) -> Void in 
+      .responseJSON { (request, response, data, error) in 
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
@@ -88,7 +88,7 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.PATCH, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) -> Void in
+      .responseJSON { (request, response, data, error) in
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
@@ -108,7 +108,7 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.POST, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) -> Void in
+      .responseJSON { (request, response, data, error) in
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))
@@ -128,7 +128,7 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.PUT, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) -> Void in
+      .responseJSON { (request, response, data, error) in
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))

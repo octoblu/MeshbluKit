@@ -42,7 +42,8 @@ public class MeshbluHttpRequester {
     getManager().request(.DELETE, url, parameters: parameters)
       .responseJSON { (_, _, result) in
         if result.error != nil || result.value == nil {
-          handler(Result(error: result.error))
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
         }else{
           let json = JSON(result.value!)
           handler(Result(value: json))
@@ -61,7 +62,8 @@ public class MeshbluHttpRequester {
     getManager().request(.GET, url, parameters: parameters)
       .responseJSON { (_, _, result) in
         if result.error != nil || result.value == nil {
-          handler(Result(error: result.error))
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
         }else{
           let json = JSON(result.value!)
           handler(Result(value: json))
@@ -80,7 +82,8 @@ public class MeshbluHttpRequester {
     getManager().request(.PATCH, url, parameters: parameters)
       .responseJSON { (_, _, result) in
         if result.error != nil || result.value == nil {
-          handler(Result(error: result.error))
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
         }else{
           let json = JSON(result.value!)
           handler(Result(value: json))
@@ -99,7 +102,8 @@ public class MeshbluHttpRequester {
     getManager().request(.POST, url, parameters: parameters)
       .responseJSON { (_, _, result) in
         if result.error != nil || result.value == nil {
-          handler(Result(error: result.error))
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
         }else{
           let json = JSON(result.value!)
           handler(Result(value: json))
@@ -118,7 +122,8 @@ public class MeshbluHttpRequester {
     getManager().request(.PUT, url, parameters: parameters)
       .responseJSON { (_, _, result) in
         if result.error != nil || result.value == nil {
-          handler(Result(error: result.error))
+          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
+          handler(Result(error: error))
         }else{
           let json = JSON(result.value!)
           handler(Result(value: json))

@@ -40,15 +40,14 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.DELETE, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) in
-        if error != nil || data == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
+      .responseJSON { (_, _, result) in
+        if result.error != nil || result.value == nil {
+          handler(Result(error: result.error))
         }else{
-          let json = JSON(data!)
+          let json = JSON(result.value!)
           handler(Result(value: json))
         }
-    }
+      }
   }
 
   public func get(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
@@ -60,15 +59,14 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.GET, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) in
-        if error != nil || data == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
+      .responseJSON { (_, _, result) in
+        if result.error != nil || result.value == nil {
+          handler(Result(error: result.error))
         }else{
-          let json = JSON(data!)
+          let json = JSON(result.value!)
           handler(Result(value: json))
         }
-    }
+      }
   }
 
   public func patch(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
@@ -80,15 +78,14 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.PATCH, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) in
-        if error != nil || data == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
+      .responseJSON { (_, _, result) in
+        if result.error != nil || result.value == nil {
+          handler(Result(error: result.error))
         }else{
-          let json = JSON(data!)
+          let json = JSON(result.value!)
           handler(Result(value: json))
         }
-    }
+      }
   }
 
   public func post(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
@@ -100,15 +97,14 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.POST, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) in
-        if error != nil || data == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
+      .responseJSON { (_, _, result) in
+        if result.error != nil || result.value == nil {
+          handler(Result(error: result.error))
         }else{
-          let json = JSON(data!)
+          let json = JSON(result.value!)
           handler(Result(value: json))
         }
-    }
+      }
   }
 
   public func put(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
@@ -120,14 +116,13 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.PUT, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) in
-        if error != nil || data == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
+      .responseJSON { (_, _, result) in
+        if result.error != nil || result.value == nil {
+          handler(Result(error: result.error))
         }else{
-          let json = JSON(data!)
+          let json = JSON(result.value!)
           handler(Result(value: json))
         }
-    }
+      }
   }
 }

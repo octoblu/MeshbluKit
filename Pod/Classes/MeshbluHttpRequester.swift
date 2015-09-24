@@ -55,7 +55,7 @@ public class MeshbluHttpRequester {
 
   }
 
-  private func handleResult(result: Result<AnyObject>, handler: (Result<JSON, NSError>) -> ()){
+  private func handleResult(result: SwiftyJSON.Result<AnyObject>, handler: (Result<JSON, NSError>) -> ()){
     if result.isFailure {
       let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [NSLocalizedFailureReasonErrorKey: result.error])
       handler(Result(error: error))

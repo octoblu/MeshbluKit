@@ -1,5 +1,6 @@
 import Foundation
 import Alamofire
+import SwiftyJSON
 
 public class MeshbluHttpRequester {
   let host : String

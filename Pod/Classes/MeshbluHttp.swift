@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import Result
 
 public class MeshbluHttpRequester {
   let host : String
@@ -68,7 +69,7 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
 
     getManager().request(.GET, url, parameters: parameters)
-      .responseJSON { (request, response, data, error) in 
+      .responseJSON { (request, response, data, error) in
         if error != nil || data == nil {
           let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
           handler(Result(error: error))

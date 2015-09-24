@@ -4,7 +4,6 @@ import Quick
 import Nimble
 import Alamofire
 import MeshbluKit
-import Result
 import SwiftyJSON
 
 class MeshbluHttpSpec: QuickSpec {
@@ -20,11 +19,11 @@ class MeshbluHttpSpec: QuickSpec {
       override private func delete(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {
         handler(self.deleteResponse)
       }
-      
+
       override private func patch(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {
         handler(self.patchResponse)
       }
-      
+
       override private func post(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {
         handler(self.postResponse)
       }
@@ -32,23 +31,23 @@ class MeshbluHttpSpec: QuickSpec {
       override private func put(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {
         handler(self.putResponse)
       }
-      
+
       override private func get(path: String, parameters: [String : AnyObject], handler: (Result<JSON, NSError>) -> ()) {
         handler(self.getResponse)
       }
     }
-    
+
     describe(".register") {
       var mockRequester: MockHttpRequester!
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.postResponse = Result(value: JSON(["uuid":"123"]))
@@ -60,11 +59,11 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-      
+
         it("should return the uuid") {
           expect(responseJSON["uuid"].string) == "123"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
@@ -82,29 +81,29 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
     }
 
-    
+
     describe(".message") {
       var mockRequester: MockHttpRequester!
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.postResponse = Result(value: JSON(["devices":["*"], "topic":"test"]))
@@ -116,16 +115,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the message") {
           expect(responseJSON["topic"].string) == "test"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -138,28 +137,28 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
     }
-    
+
     describe(".data") {
       var mockRequester: MockHttpRequester!
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.postResponse = Result(value: JSON(["data":"blah"]))
@@ -171,16 +170,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the message") {
           expect(responseJSON["data"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -193,29 +192,29 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
-    
+
     describe(".data") {
       var mockRequester: MockHttpRequester!
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.postResponse = Result(value: JSON(["data":"blah"]))
@@ -227,16 +226,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the message") {
           expect(responseJSON["data"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -249,29 +248,29 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
-    
+
     describe(".getData") {
       var mockRequester: MockHttpRequester!
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.getResponse = Result(value: JSON(["data":"blah"]))
@@ -283,16 +282,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the message") {
           expect(responseJSON["data"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -305,29 +304,29 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
-    
+
     describe(".getPublicKey") {
       var mockRequester: MockHttpRequester!
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.getResponse = Result(value: JSON(["publicKey":"blah"]))
@@ -339,16 +338,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the message") {
           expect(responseJSON["publicKey"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -361,16 +360,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
 
     describe(".devices") {
@@ -378,12 +377,12 @@ class MeshbluHttpSpec: QuickSpec {
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
             mockRequester.getResponse = Result(value: JSON([["something":"test"]]))
@@ -395,16 +394,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return a list of devices") {
           expect(responseJSON[0]["something"].string) == "test"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -417,16 +416,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
 
     describe(".resetToken") {
@@ -434,12 +433,12 @@ class MeshbluHttpSpec: QuickSpec {
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.postResponse = Result(value: JSON(["token":"blah"]))
@@ -451,16 +450,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the message") {
           expect(responseJSON["token"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -473,16 +472,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
 
     describe(".generateToken") {
@@ -490,12 +489,12 @@ class MeshbluHttpSpec: QuickSpec {
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.postResponse = Result(value: JSON(["token":"blah"]))
@@ -507,16 +506,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the message") {
           expect(responseJSON["token"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -529,16 +528,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
 
     describe(".updateDangerously") {
@@ -546,12 +545,12 @@ class MeshbluHttpSpec: QuickSpec {
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.putResponse = Result(value: JSON(["data":"blah"]))
@@ -563,16 +562,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the data") {
           expect(responseJSON["data"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -585,16 +584,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
 
     describe(".update") {
@@ -602,12 +601,12 @@ class MeshbluHttpSpec: QuickSpec {
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.patchResponse = Result(value: JSON(["data":"blah"]))
@@ -619,16 +618,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the data") {
           expect(responseJSON["data"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -641,16 +640,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
 
     describe(".deleteDevice") {
@@ -658,12 +657,12 @@ class MeshbluHttpSpec: QuickSpec {
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.deleteResponse = Result(value: JSON(["data":"blah"]))
@@ -675,16 +674,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return the data") {
           expect(responseJSON["data"].string) == "blah"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -697,16 +696,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
 
     describe(".devices") {
@@ -714,12 +713,12 @@ class MeshbluHttpSpec: QuickSpec {
       var responseJSON: JSON!
       var responseError: NSError!
       var meshblu: MeshbluHttp!
-      
+
       beforeEach {
         mockRequester = MockHttpRequester()
         meshblu = MeshbluHttp(requester: mockRequester)
       }
-      
+
       describe("when successful") {
         beforeEach {
           mockRequester.getResponse = Result(value: JSON([["something":"test"]]))
@@ -731,16 +730,16 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should return a list of devices") {
           expect(responseJSON[0]["something"].string) == "test"
         }
-        
+
         it("should not have an error") {
           expect(responseError).to(beNil())
         }
       }
-      
+
       describe("when error") {
         beforeEach {
           let error = NSError()
@@ -753,17 +752,17 @@ class MeshbluHttpSpec: QuickSpec {
             }
           }
         }
-        
+
         it("should not return a value") {
           expect(responseJSON).to(beNil())
         }
-        
+
         it("should have an error") {
           expect(responseError).to(beAKindOf(NSError))
         }
       }
-      
+
     }
-    
+
   }
 }

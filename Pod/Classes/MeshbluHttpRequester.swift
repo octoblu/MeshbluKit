@@ -31,103 +31,67 @@ public class MeshbluHttpRequester {
     getManager().session.configuration.HTTPAdditionalHeaders = defaultHeaders
   }
 
-  public func delete(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+  private func getRequest(method: String, path : String, parameters : [String: AnyObject]) -> Request {
     let urlComponent = NSURLComponents()
     urlComponent.port = self.port
     urlComponent.host = self.host
     urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
     urlComponent.path = path
     let url = urlComponent.string!
+    switch method {
+      case "DELETE":
+        return getManager().request(.DELETE, url, parameters: parameters, encoding: .JSON)
+      case "POST":
+        return getManager().request(.POST, url, parameters: parameters, encoding: .JSON)
+      case "GET":
+        return getManager().request(.GET, url, parameters: parameters, encoding: .JSON)
+      case "PUT":
+        return getManager().request(.PUT, url, parameters: parameters, encoding: .JSON)
+      case "PATCH":
+        return getManager().request(.PATCH, url, parameters: parameters, encoding: .JSON)
+      default:
+        return getManager().request(.GET, url, parameters: parameters, encoding: .JSON)
+    }
 
-    getManager().request(.DELETE, url, parameters: parameters)
-      .responseJSON { (_, _, result) in
-        if result.error != nil || result.value == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
-        }else{
-          let json = JSON(result.value!)
-          handler(Result(value: json))
-        }
-      }
+  }
+
+  private func handleResult(result: Result<AnyObject>, handler: (Result<JSON, NSError>) -> ()){
+    if result.isFailure {
+      let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [NSLocalizedFailureReasonErrorKey: result.error])
+      handler(Result(error: error))
+      return
+    }
+    let json = JSON(result.value!)
+    handler(Result(value: json))
+  }
+
+  public func delete(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
+    self.getRequest("DELETE", path: path, parameters: parameters).responseJSON { (_, _, result) in
+      self.handleResult(result, handler: handler)
+    }
   }
 
   public func get(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
-    let urlComponent = NSURLComponents()
-    urlComponent.port = self.port
-    urlComponent.host = self.host
-    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
-    urlComponent.path = path
-    let url = urlComponent.string!
-
-    getManager().request(.GET, url, parameters: parameters)
-      .responseJSON { (_, _, result) in
-        if result.error != nil || result.value == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
-        }else{
-          let json = JSON(result.value!)
-          handler(Result(value: json))
-        }
-      }
+    self.getRequest("GET", path: path, parameters: parameters).responseJSON { (_, _, result) in
+      self.handleResult(result, handler: handler)
+    }
   }
 
   public func patch(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
-    let urlComponent = NSURLComponents()
-    urlComponent.port = self.port
-    urlComponent.host = self.host
-    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
-    urlComponent.path = path
-    let url = urlComponent.string!
-
-    getManager().request(.PATCH, url, parameters: parameters)
-      .responseJSON { (_, _, result) in
-        if result.error != nil || result.value == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
-        }else{
-          let json = JSON(result.value!)
-          handler(Result(value: json))
-        }
-      }
+    self.getRequest("PATCH", path: path, parameters: parameters).responseJSON { (_, _, result) in
+      self.handleResult(result, handler: handler)
+    }
   }
 
   public func post(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
-    let urlComponent = NSURLComponents()
-    urlComponent.port = self.port
-    urlComponent.host = self.host
-    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
-    urlComponent.path = path
-    let url = urlComponent.string!
-
-    getManager().request(.POST, url, parameters: parameters)
-      .responseJSON { (_, _, result) in
-        if result.error != nil || result.value == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
-        }else{
-          let json = JSON(result.value!)
-          handler(Result(value: json))
-        }
-      }
+    self.getRequest("POST", path: path, parameters: parameters).responseJSON { (_, _, result) in
+      self.handleResult(result, handler: handler)
+    }
   }
 
   public func put(path : String, parameters : [String: AnyObject], handler: (Result<JSON, NSError>) -> ()){
-    let urlComponent = NSURLComponents()
-    urlComponent.port = self.port
-    urlComponent.host = self.host
-    urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
-    urlComponent.path = path
-    let url = urlComponent.string!
-
-    getManager().request(.PUT, url, parameters: parameters)
-      .responseJSON { (_, _, result) in
-        if result.error != nil || result.value == nil {
-          let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [:])
-          handler(Result(error: error))
-        }else{
-          let json = JSON(result.value!)
-          handler(Result(value: json))
-        }
-      }
+    self.getRequest("PUT", path: path, parameters: parameters).responseJSON { (_, _, result) in
+      self.handleResult(result, handler: handler)
+    }
   }
 }

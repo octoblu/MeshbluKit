@@ -142,7 +142,7 @@ public class MeshbluHttpRequester {
   }
 }
 
-@objc (MeshbluHttp) public class MeshbluHttp {
+public class MeshbluHttp {
   var httpRequester : MeshbluHttpRequester
   var meshbluConfig : [String: AnyObject] = [:]
 

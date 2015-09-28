@@ -30,7 +30,7 @@ public class MeshbluHttp {
   public func setCredentials(uuid: String, token: String) {
     self.meshbluConfig.updateValue(uuid, forKey: "uuid")
     self.meshbluConfig.updateValue(token, forKey: "token")
-    self.httpRequester.setDefaultHeaders(uuid, token: token)
+    self.httpRequester.setCredentials(uuid, password: token)
   }
 
   public func claimDevice(uuid: String, handler: (Result<JSON, NSError>) -> ()){

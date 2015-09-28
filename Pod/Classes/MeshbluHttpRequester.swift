@@ -6,11 +6,14 @@ public class MeshbluHttpRequester {
   let host : String
   let port : Int
   var manager : Alamofire.Manager
+  var username : String?
+  var password : String?
 
   public init(host : String, port : Int){
     self.host = host
     self.port = port
-    self.manager = Alamofire.Manager.sharedInstance
+    let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+    self.manager = Alamofire.Manager(configuration: configuration)
   }
 
   public convenience init(){
@@ -21,44 +24,49 @@ public class MeshbluHttpRequester {
     self.init(host: "example", port: 1)
   }
 
-  public func setDefaultHeaders(uuid : String, token : String) {
-    var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
-
-    defaultHeaders["meshblu_auth_uuid"] = uuid
-    defaultHeaders["meshblu_auth_token"] = token
-
-    let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-    configuration.HTTPAdditionalHeaders = defaultHeaders
-    self.manager = Alamofire.Manager(configuration: configuration)
+  public func setCredentials(username : String, password : String) {
+    self.username = username
+    self.password = password
   }
 
-  private func getRequest(method: String, path : String, parameters : [String: AnyObject]) -> Request {
+  private func getRequest(method: String, path : String, parameters : [String: AnyObject]) -> Request{
     let urlComponent = NSURLComponents()
     urlComponent.port = self.port
     urlComponent.host = self.host
     urlComponent.scheme = urlComponent.port == 443 ? "https" : "http"
     urlComponent.path = path
-    let url = urlComponent.string!
-    switch method {
-      case "DELETE":
-        return self.manager.request(.DELETE, url, parameters: parameters, encoding: .JSON)
-      case "POST":
-        return self.manager.request(.POST, url, parameters: parameters, encoding: .JSON)
-      case "GET":
-        return self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
-      case "PUT":
-        return self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON)
-      case "PATCH":
-        return self.manager.request(.PATCH, url, parameters: parameters, encoding: .JSON)
-      default:
-        return self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
+    if method == "GET" && parameters.count > 0 {
+      var queryItems: [NSURLQueryItem] = []
+      for (key, value) in parameters {
+        queryItems.append(NSURLQueryItem(name: key, value: value as? String))
+      }
+      urlComponent.queryItems = queryItems
     }
-
+    let url = urlComponent.string!
+    var request: Request
+    switch method {
+    case "DELETE":
+      request = self.manager.request(.DELETE, url, parameters: parameters, encoding: .JSON)
+    case "POST":
+      request = self.manager.request(.POST, url, parameters: parameters, encoding: .JSON)
+    case "GET":
+      request = self.manager.request(.GET, url, encoding: .JSON)
+    case "PUT":
+      request = self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON)
+    case "PATCH":
+      request = self.manager.request(.PATCH, url, parameters: parameters, encoding: .JSON)
+    default:
+      request = self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
+    }
+    if username != nil && password != nil {
+      return request.authenticate(user: username!, password: password!)
+    }
+    return request
   }
 
   private func handleResult(result: Alamofire.Result<AnyObject>, handler: (Result<JSON, NSError>) -> ()){
     if result.isFailure {
-      let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [NSLocalizedFailureReasonErrorKey: "\(result.error)"])
+      let error = NSError(domain: "com.octoblu.meshblu", code: 500, userInfo: [NSLocalizedFailureReasonErrorKey: "\(result.error!)"])
       handler(Result(error: error))
       return
     }

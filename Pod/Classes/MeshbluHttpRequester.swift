@@ -5,10 +5,12 @@ import SwiftyJSON
 public class MeshbluHttpRequester {
   let host : String
   let port : Int
+  var manager : Alamofire.Manager
 
   public init(host : String, port : Int){
     self.host = host
     self.port = port
+    self.manager = Alamofire.Manager.sharedInstance
   }
 
   public convenience init(){
@@ -19,16 +21,15 @@ public class MeshbluHttpRequester {
     self.init(host: "example", port: 1)
   }
 
-  private func getManager() -> Manager {
-    return Alamofire.Manager.sharedInstance
-  }
-
   public func setDefaultHeaders(uuid : String, token : String) {
-    var defaultHeaders = getManager().session.configuration.HTTPAdditionalHeaders ?? [:]
+    var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
+
     defaultHeaders["meshblu_auth_uuid"] = uuid
     defaultHeaders["meshblu_auth_token"] = token
 
-    getManager().session.configuration.HTTPAdditionalHeaders = defaultHeaders
+    let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+    configuration.HTTPAdditionalHeaders = defaultHeaders
+    self.manager = Alamofire.Manager(configuration: configuration)
   }
 
   private func getRequest(method: String, path : String, parameters : [String: AnyObject]) -> Request {
@@ -40,17 +41,17 @@ public class MeshbluHttpRequester {
     let url = urlComponent.string!
     switch method {
       case "DELETE":
-        return getManager().request(.DELETE, url, parameters: parameters, encoding: .JSON)
+        return self.manager.request(.DELETE, url, parameters: parameters, encoding: .JSON)
       case "POST":
-        return getManager().request(.POST, url, parameters: parameters, encoding: .JSON)
+        return self.manager.request(.POST, url, parameters: parameters, encoding: .JSON)
       case "GET":
-        return getManager().request(.GET, url, parameters: parameters, encoding: .JSON)
+        return self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
       case "PUT":
-        return getManager().request(.PUT, url, parameters: parameters, encoding: .JSON)
+        return self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON)
       case "PATCH":
-        return getManager().request(.PATCH, url, parameters: parameters, encoding: .JSON)
+        return self.manager.request(.PATCH, url, parameters: parameters, encoding: .JSON)
       default:
-        return getManager().request(.GET, url, parameters: parameters, encoding: .JSON)
+        return self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
     }
 
   }

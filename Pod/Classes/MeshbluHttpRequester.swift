@@ -44,23 +44,28 @@ public class MeshbluHttpRequester {
     }
     let url = urlComponent.string!
     var request: Request
+    var headers : [String: String] = [:]
+    if username != nil && password != nil {
+      let credentialData = "\(username!):\(password!)".dataUsingEncoding(NSUTF8StringEncoding)!
+      let base64Credentials = credentialData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0))
+      headers.updateValue("Basic \(base64Credentials)", forKey: "Authorization")
+    }
+
     switch method {
     case "DELETE":
-      request = self.manager.request(.DELETE, url, parameters: parameters, encoding: .JSON)
+      request = self.manager.request(.DELETE, url, parameters: parameters, encoding: .JSON, headers: headers)
     case "POST":
-      request = self.manager.request(.POST, url, parameters: parameters, encoding: .JSON)
+      request = self.manager.request(.POST, url, parameters: parameters, encoding: .JSON, headers: headers)
     case "GET":
-      request = self.manager.request(.GET, url, encoding: .JSON)
+      request = self.manager.request(.GET, url, encoding: .JSON, headers: headers)
     case "PUT":
-      request = self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON)
+      request = self.manager.request(.PUT, url, parameters: parameters, encoding: .JSON, headers: headers)
     case "PATCH":
-      request = self.manager.request(.PATCH, url, parameters: parameters, encoding: .JSON)
+      request = self.manager.request(.PATCH, url, parameters: parameters, encoding: .JSON, headers: headers)
     default:
-      request = self.manager.request(.GET, url, parameters: parameters, encoding: .JSON)
+      request = self.manager.request(.GET, url, parameters: parameters, encoding: .JSON, headers: headers)
     }
-    if username != nil && password != nil {
-      return request.authenticate(user: username!, password: password!)
-    }
+
     return request
   }
 

@@ -5,6 +5,11 @@
 [![License](https://img.shields.io/cocoapods/l/MeshbluKit.svg?style=flat)](http://cocoapods.org/pods/MeshbluKit)
 [![Platform](https://img.shields.io/cocoapods/p/MeshbluKit.svg?style=flat)](http://cocoapods.org/pods/MeshbluKit)
 
+
+# DO NOT USE
+
+This project has been replaced with [swift-meshblu-http](https://github.com/octoblu/swift-meshblu-http).
+
 ## Usage
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
